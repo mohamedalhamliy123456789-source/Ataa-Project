@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  DONOR
+  ADMIN
+}
+
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+}
+
+enum DonationStatus {
+  SIMULATED_SUCCESS
+  FAILED
+}
+
+model User {
+  id            String             @id @default(uuid())
+  name          String
+  email         String             @unique
+  phone         String?
+  password_hash String
+  role          Role               @default(DONOR)
+  otp_secret    String?
+  created_at    DateTime           @default(now())
+  
+  projects      Project[]          @relation("CreatedProjects")
+  donations     Donation[]
+}
+
+model Project {
+  id              String               @id @default(uuid())
+  title           String
+  description     String
+  target_amount   Float
+  current_amount  Float                @default(0)
+  image_url       String?
+  status          ProjectStatus        @default(ACTIVE)
+  created_by      String
+  created_at      DateTime             @default(now())
+
+  creator         User                 @relation("CreatedProjects", fields: [created_by], references: [id])
+  donations       Donation[]
+  reports         TransparencyReport[]
+}
+
+model Donation {
+  id          String         @id @default(uuid())
+  user_id     String
+  project_id  String
+  amount      Float
+  status      DonationStatus @default(SIMULATED_SUCCESS)
+  created_at  DateTime       @default(now())
+
+  user        User           @relation(fields: [user_id], references: [id])
+  project     Project        @relation(fields: [project_id], references: [id])
+}
+
+model TransparencyReport {
+  id           String    @id @default(uuid())
+  project_id   String
+  content      String
+  published_at DateTime  @default(now())
+
+  project      Project   @relation(fields: [project_id], references: [id])
+}
