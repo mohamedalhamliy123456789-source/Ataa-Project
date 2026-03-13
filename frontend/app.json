@@ -11,12 +11,8 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "owner": "frasalysayy1",
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
-      "package": "com.frasalysayy1.ataa",
+      "package": "com.feras11.ataa",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -27,6 +23,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c00f8088-6b8f-438a-a436-94f88b918066"
+      }
     }
   }
 }

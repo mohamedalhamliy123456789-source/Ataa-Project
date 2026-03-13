@@ -4,7 +4,7 @@
 const LOCAL_IP = '127.0.0.1'; // Use '10.0.2.2' for Android Emulator or your PC IP for physical devices
 const PORT = '5000';
 
-export const API_BASE_URL = `http://${LOCAL_IP}:${PORT}/api`;
+export const API_BASE_URL = `https://ataa-backend.onrender.com/api`;
 
 export const ENDPOINTS = {
     AUTH: {
