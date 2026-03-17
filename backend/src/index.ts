@@ -15,6 +15,10 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.get('/', (req: Request, res: Response) => {
+  res.send('Ata\'a Backend is running! 🚀 (Use /health to check status)');
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/donations', donationRoutes);
