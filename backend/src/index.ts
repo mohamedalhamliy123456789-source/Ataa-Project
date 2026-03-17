@@ -37,7 +37,6 @@ app.get('/debug-path', (req: Request, res: Response) => {
   const files = fs.existsSync(frontendPath) ? fs.readdirSync(frontendPath) : ['NOT FOUND'];
   res.json({ __dirname, frontendPath, files });
 });
-});
 
 // Wildcard route to serve index.html for any non-API routes
 app.get('*', (req: Request, res: Response) => {
