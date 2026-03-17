@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
+import path from 'path';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import projectRoutes from './routes/projects';
@@ -24,8 +25,18 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/admin', adminRoutes);
 
+// Serve static files from the frontend export
+const frontendPath = path.join(__dirname, '../../frontend/dist_web');
+app.use(express.static(frontendPath));
+
+// Health check
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'ok' });
+});
+
+// Wildcard route to serve index.html for any non-API routes
+app.get('*', (req: Request, res: Response) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 app.listen(port, () => {
