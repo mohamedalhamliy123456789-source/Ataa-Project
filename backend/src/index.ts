@@ -22,7 +22,8 @@ app.use('/api/donations', donationRoutes);
 app.use('/api/admin', adminRoutes);
 
 // Serve static files from the frontend export
-const frontendPath = path.join(__dirname, '../../frontend/dist_web');
+// __dirname at runtime is /backend/dist, so we need 3 levels up to reach the project root
+const frontendPath = path.join(__dirname, '..', '..', '..', 'frontend', 'dist_web');
 app.use(express.static(frontendPath));
 
 // Health check
