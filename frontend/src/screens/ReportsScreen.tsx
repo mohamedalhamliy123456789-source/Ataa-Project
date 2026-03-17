@@ -2,98 +2,79 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
+import Skeleton from '../components/Skeleton';
 
 export default function ReportsScreen({ navigation }: any) {
-    const [activeTab, setActiveTab] = useState('reports');
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeYear, setActiveYear] = useState('2024');
+
+    React.useEffect(() => {
+        const timer = setTimeout(() => setIsLoading(false), 2000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    const years = ['2024', '2023', '2022', '2021'];
 
     const reports = [
-        {
-            id: 1,
-            projectId: 1,
-            title: 'تقرير إنجاز: بئر قرية النور',
-            date: '15 مارس 2026',
-            content: 'بفضل الله ثم تبرعاتكم، اكتمل حفر البئر وتمديد الأنابيب لخدمة أكثر من 500 نسمة.',
-            image: 'https://images.unsplash.com/photo-1541819068018-8f53941459ff?q=80&w=800&auto=format&fit=crop',
-            status: 'مكتمل'
-        },
-        {
-            id: 2,
-            projectId: 3,
-            title: 'توزيع السلال الغذائية لشهر رمضان',
-            date: '10 مارس 2026',
-            content: 'تم توزيع 150 سلة غذائية على الأسر المتعففة في العاصمة صنعاء.',
-            image: 'https://images.unsplash.com/photo-1593113589914-07599018dd05?q=80&w=800&auto=format&fit=crop',
-            status: 'قيد التنفيذ'
-        }
+        { id: 1, title: 'التقرير السنوي لعام 2024', date: 'ديسمبر 2024', type: 'سنوي', size: '4.5 MB' },
+        { id: 2, title: 'تقرير إنجازات الربع الثالث', date: 'أكتوبر 2024', type: 'دوري', size: '2.8 MB' },
+        { id: 3, title: 'تقرير حملة الشتاء الدافئ', date: 'فبراير 2024', type: 'حمله', size: '3.1 MB' },
+        { id: 4, title: 'تقرير مشاريع حفر الآبار', date: 'يناير 2024', type: 'مشروع', size: '5.2 MB' },
     ];
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar style="dark" backgroundColor="#fff" />
+            <StatusBar style="dark" />
 
             {/* Header */}
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>تقارير ومتابعة</Text>
-                <TouchableOpacity style={styles.headerBackBtn} onPress={() => navigation.goBack()}>
-                    <Ionicons name="filter" size={24} color="#111" />
-                </TouchableOpacity>
+                <Text style={styles.headerTitle}>التقارير والشفافية</Text>
             </View>
 
-            {/* Custom Tabs */}
-            <View style={styles.tabsContainer}>
-                <TouchableOpacity
-                    style={[styles.tabBtn, activeTab === 'reports' && styles.tabBtnActive]}
-                    onPress={() => setActiveTab('reports')}
-                >
-                    <Text style={[styles.tabText, activeTab === 'reports' && styles.tabTextActive]}>تقارير التنفيذ</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.tabBtn, activeTab === 'history' && styles.tabBtnActive]}
-                    onPress={() => setActiveTab('history')}
-                >
-                    <Text style={[styles.tabText, activeTab === 'history' && styles.tabTextActive]}>سجل التبرعات</Text>
-                </TouchableOpacity>
-            </View>
-
-            <ScrollView showsVerticalScrollIndicator={false} style={styles.content}>
-
-                {activeTab === 'reports' ? (
-                    <View>
-                        <Text style={styles.infoText}>تابع أثر تبرعاتك بشفافية كاملة عبر التقارير الميدانية.</Text>
-
-                        {reports.map(report => (
-                            <View key={report.id} style={styles.reportCard}>
-                                <View style={styles.reportHeader}>
-                                    <View style={styles.reportDateBadge}>
-                                        <MaterialCommunityIcons name="calendar-check" size={14} color="#00A651" />
-                                        <Text style={styles.reportDate}>{report.date}</Text>
-                                    </View>
-                                    <View style={[styles.statusBadge, report.status === 'قيد التنفيذ' && { backgroundColor: '#FFF4E5' }]}>
-                                        <Text style={[styles.statusText, report.status === 'قيد التنفيذ' && { color: '#F5A623' }]}>{report.status}</Text>
-                                    </View>
-                                </View>
-
-                                <Text style={styles.reportTitle}>{report.title}</Text>
-                                <Text style={styles.reportContent}>{report.content}</Text>
-
-                                <Image source={{ uri: report.image }} style={styles.reportImage} />
-
-                                <TouchableOpacity style={styles.downloadBtn}>
-                                    <Ionicons name="download-outline" size={18} color="#00A651" />
-                                    <Text style={styles.downloadBtnText}>تحميل التقرير الكامل (PDF)</Text>
-                                </TouchableOpacity>
-                            </View>
-                        ))}
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+                
+                {/* Intro Card */}
+                <LinearGradient colors={['#007A3D', '#00A651']} style={styles.introCard}>
+                    <View style={styles.introTextWrap}>
+                        <Text style={styles.introTitle}>التزامنا بالشفافية</Text>
+                        <Text style={styles.introDesc}>نشارككم قصص النجاح وتقارير الإنجاز لحظة بلحظة، لنبني سوياً جسور الثقة والعطاء.</Text>
                     </View>
-                ) : (
-                    <View style={styles.emptyState}>
-                        <Ionicons name="receipt-outline" size={60} color="#E0E0E0" />
-                        <Text style={styles.emptyTitle}>لا توجد تبرعات سابقة</Text>
-                        <Text style={styles.emptySub}>عطاؤك يزرع الأمل، بادر بالتبرع الآن</Text>
-                        <TouchableOpacity style={styles.donateNowBtn} onPress={() => navigation.navigate('Projects')}>
-                            <Text style={styles.donateNowText}>تصفح المشاريع</Text>
+                    <MaterialCommunityIcons name="file-document-check-outline" size={80} color="rgba(255,255,255,0.2)" style={styles.introIcon} />
+                </LinearGradient>
+
+                {/* Year Filter */}
+                <View style={styles.yearRow}>
+                    {years.map(y => (
+                        <TouchableOpacity 
+                            key={y} 
+                            style={[styles.yearBtn, activeYear === y && styles.yearBtnActive]}
+                            onPress={() => setActiveYear(y)}
+                        >
+                            <Text style={[styles.yearText, activeYear === y && styles.yearTextActive]}>{y}</Text>
                         </TouchableOpacity>
-                    </View>
+                    ))}
+                </View>
+
+                {/* Reports List */}
+                <Text style={styles.sectionTitle}>التقارير المتاحة</Text>
+                {isLoading ? (
+                    [1, 2, 3].map(i => <Skeleton key={i} width="100%" height={90} borderRadius={20} style={{ marginBottom: 12 }} />)
+                ) : (
+                    reports.map(r => (
+                        <TouchableOpacity key={r.id} style={styles.reportCard}>
+                            <View style={styles.reportIconBg}>
+                                <MaterialCommunityIcons name="file-pdf-box" size={32} color="#E12A3C" />
+                            </View>
+                            <View style={styles.reportInfo}>
+                                <Text style={styles.reportTitle}>{r.title}</Text>
+                                <Text style={styles.reportMeta}>{r.date} • {r.size}</Text>
+                            </View>
+                            <TouchableOpacity style={styles.downloadBtn}>
+                                <Ionicons name="download-outline" size={24} color="#00A651" />
+                            </TouchableOpacity>
+                        </TouchableOpacity>
+                    ))
                 )}
 
                 <View style={{ height: 100 }} />
@@ -104,40 +85,24 @@ export default function ReportsScreen({ navigation }: any) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#F8F9FA' },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop: 50,
-        paddingBottom: 15,
-        backgroundColor: '#fff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#F0F0F0',
-        position: 'relative'
-    },
-    headerTitle: { fontSize: 20, fontWeight: '800', color: '#111' },
-    headerBackBtn: { position: 'absolute', right: 20, top: 48, padding: 4 },
-    tabsContainer: { flexDirection: 'row-reverse', backgroundColor: '#fff', paddingHorizontal: 20, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#F0F0F0' },
-    tabBtn: { flex: 1, paddingVertical: 12, alignItems: 'center', borderBottomWidth: 3, borderBottomColor: 'transparent' },
-    tabBtnActive: { borderBottomColor: '#00A651' },
-    tabText: { fontSize: 15, fontWeight: '600', color: '#888' },
-    tabTextActive: { color: '#00A651', fontWeight: '800' },
+    header: { paddingTop: 55, paddingBottom: 20, backgroundColor: '#fff', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#F0F0F0' },
+    headerTitle: { fontSize: 20, fontWeight: '900', color: '#111' },
     content: { padding: 20 },
-    infoText: { fontSize: 13, color: '#666', marginBottom: 20, textAlign: 'right', lineHeight: 22 },
-    reportCard: { backgroundColor: '#fff', borderRadius: 20, padding: 20, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.04, shadowRadius: 10, elevation: 3 },
-    reportHeader: { flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
-    reportDateBadge: { flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: '#E5FAEB', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 },
-    reportDate: { color: '#00A651', fontSize: 12, fontWeight: '700', marginRight: 5 },
-    statusBadge: { backgroundColor: '#E5FAEB', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 20 },
-    statusText: { color: '#00A651', fontSize: 11, fontWeight: '800' },
-    reportTitle: { fontSize: 18, fontWeight: '800', color: '#111', marginBottom: 10, textAlign: 'right' },
-    reportContent: { fontSize: 14, color: '#666', lineHeight: 24, marginBottom: 15, textAlign: 'right' },
-    reportImage: { width: '100%', height: 160, borderRadius: 12, marginBottom: 15 },
-    downloadBtn: { flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', paddingVertical: 14, backgroundColor: '#F8F9FA', borderRadius: 12, borderWidth: 1, borderColor: '#EEE' },
-    downloadBtnText: { color: '#00A651', fontSize: 14, fontWeight: '700', marginRight: 8 },
-    emptyState: { alignItems: 'center', justifyContent: 'center', marginTop: 60 },
-    emptyTitle: { fontSize: 18, fontWeight: '800', color: '#111', marginTop: 20, marginBottom: 8 },
-    emptySub: { fontSize: 14, color: '#888', marginBottom: 25 },
-    donateNowBtn: { backgroundColor: '#00A651', paddingHorizontal: 30, paddingVertical: 14, borderRadius: 12 },
-    donateNowText: { color: '#fff', fontSize: 16, fontWeight: '800' }
+    introCard: { borderRadius: 24, padding: 25, flexDirection: 'row-reverse', alignItems: 'center', overflow: 'hidden', marginBottom: 25 },
+    introTextWrap: { flex: 1, zIndex: 1 },
+    introTitle: { color: '#fff', fontSize: 22, fontWeight: '900', marginBottom: 8, textAlign: 'right' },
+    introDesc: { color: '#E5FAEB', fontSize: 13, textAlign: 'right', lineHeight: 20 },
+    introIcon: { position: 'absolute', left: -10, bottom: -10 },
+    yearRow: { flexDirection: 'row-reverse', gap: 10, marginBottom: 25 },
+    yearBtn: { flex: 1, backgroundColor: '#fff', borderRadius: 12, paddingVertical: 10, alignItems: 'center', borderWidth: 1, borderColor: '#EEE' },
+    yearBtnActive: { backgroundColor: '#00A651', borderColor: '#00A651' },
+    yearText: { fontSize: 14, fontWeight: '700', color: '#666' },
+    yearTextActive: { color: '#fff' },
+    sectionTitle: { fontSize: 18, fontWeight: '900', color: '#111', marginBottom: 15, textAlign: 'right' },
+    reportCard: { backgroundColor: '#fff', borderRadius: 20, padding: 15, flexDirection: 'row-reverse', alignItems: 'center', marginBottom: 12, shadowColor: '#000', shadowOpacity: 0.03, elevation: 2 },
+    reportIconBg: { width: 55, height: 55, borderRadius: 15, backgroundColor: '#FFF5F5', justifyContent: 'center', alignItems: 'center', marginLeft: 15 },
+    reportInfo: { flex: 1, alignItems: 'flex-end' },
+    reportTitle: { fontSize: 15, fontWeight: '800', color: '#111', marginBottom: 4 },
+    reportMeta: { fontSize: 12, color: '#888' },
+    downloadBtn: { width: 45, height: 45, borderRadius: 12, backgroundColor: '#F0FAF3', justifyContent: 'center', alignItems: 'center' },
 });

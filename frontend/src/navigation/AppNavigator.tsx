@@ -15,6 +15,14 @@ import ProjectDetailsScreen from '../screens/ProjectDetailsScreen';
 import ZakatScreen from '../screens/ZakatScreen';
 import CartScreen from '../screens/CartScreen';
 import DonationScreen from '../screens/DonationScreen';
+import OTPScreen from '../screens/OTPScreen';
+import NotificationsScreen from '../screens/NotificationsScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import OnboardingScreen from '../screens/OnboardingScreen';
+import HelpSupportScreen from '../screens/HelpSupportScreen';
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import AdminDashboardScreen from '../screens/AdminDashboardScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -105,7 +113,7 @@ const tabStyles = StyleSheet.create({
 
 // ─── Bottom Tab Navigator ─────────────────────────────────────────────────────
 
-function MainTabs() {
+function MainTabs({ route }: any) {
     return (
         <Tab.Navigator
             tabBar={(props) => <CustomTabBar {...props} />}
@@ -131,6 +139,9 @@ export default function AppNavigator() {
                 animationDuration: 300,
             }}
         >
+            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="MainTabs" component={MainTabs} />
             <Stack.Screen
                 name="ProjectDetails"
@@ -165,6 +176,41 @@ export default function AppNavigator() {
                     presentation: 'modal',
                     animation: 'slide_from_bottom',
                     animationDuration: 400,
+                }}
+            />
+            <Stack.Screen
+                name="OTP"
+                component={OTPScreen}
+                options={{
+                    animation: 'slide_from_right',
+                }}
+            />
+            <Stack.Screen
+                name="Notifications"
+                component={NotificationsScreen}
+                options={{
+                    animation: 'slide_from_left',
+                }}
+            />
+            <Stack.Screen
+                name="Settings"
+                component={SettingsScreen}
+                options={{
+                    animation: 'slide_from_bottom',
+                }}
+            />
+            <Stack.Screen
+                name="HelpSupport"
+                component={HelpSupportScreen}
+                options={{
+                    animation: 'slide_from_right',
+                }}
+            />
+            <Stack.Screen
+                name="AdminDashboard"
+                component={AdminDashboardScreen}
+                options={{
+                    animation: 'slide_from_bottom',
                 }}
             />
         </Stack.Navigator>

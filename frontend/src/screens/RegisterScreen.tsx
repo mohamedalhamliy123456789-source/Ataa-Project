@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import {
     View, Text, StyleSheet, SafeAreaView, TouchableOpacity,
-    TextInput, ScrollView, KeyboardAvoidingView, Platform
+    TextInput, ScrollView, KeyboardAvoidingView, Platform, Alert
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ENDPOINTS } from '../config/api';
 
 export default function RegisterScreen({ onLogin, navigation }: any) {
     const [name, setName] = useState('');
@@ -14,9 +15,41 @@ export default function RegisterScreen({ onLogin, navigation }: any) {
     const [confirmPass, setConfirmPass] = useState('');
     const [showPass, setShowPass] = useState(false);
     const [agree, setAgree] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const handleRegister = () => {
-        setTimeout(() => onLogin?.(), 1200);
+    const handleRegister = async () => {
+        if (!name || !email || !password) {
+            Alert.alert('تنبيه', 'يرجى ملأ جميع الحقول المطلوبة');
+            return;
+        }
+        if (password !== confirmPass) {
+            Alert.alert('تنبيه', 'كلمات المرور غير متطابقة');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await fetch(ENDPOINTS.AUTH.REGISTER, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, phone, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                Alert.alert('نجاح', 'تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.', [
+                    { text: 'حسناً', onPress: () => navigation?.goBack?.() }
+                ]);
+            } else {
+                Alert.alert('خطأ في التسجيل', data.error || 'حدث خطأ غير متوقع');
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('خطأ في الاتصال', 'تعذر الاتصال بالخادم. يرجى المحاولة لاحقاً.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -94,9 +127,12 @@ export default function RegisterScreen({ onLogin, navigation }: any) {
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={[styles.registerBtn, !agree && styles.registerBtnDisabled]} onPress={handleRegister} disabled={!agree} activeOpacity={0.85}>
+                        <TouchableOpacity style={[styles.registerBtn, (!agree || loading) && styles.registerBtnDisabled]} onPress={handleRegister} disabled={!agree || loading} activeOpacity={0.85}>
                             <LinearGradient colors={agree ? ['#00A651', '#007A3D'] : ['#CCC', '#BBB']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.registerGrad}>
-                                <Text style={styles.registerBtnText}>إنشاء الحساب</Text>
+                                {loading 
+                                    ? <MaterialCommunityIcons name="loading" size={24} color="#fff" />
+                                    : <Text style={styles.registerBtnText}>إنشاء الحساب</Text>
+                                }
                             </LinearGradient>
                         </TouchableOpacity>
 
