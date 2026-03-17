@@ -2,7 +2,7 @@ services:
   - type: web
     name: ataa-backend
     runtime: node
-    buildCommand: cd backend && npm install && npm run build
+    buildCommand: cd frontend && npm install && npm run build:web && cd ../backend && npm install && npm run build
     startCommand: cd backend && npm start
     envVars:
       - key: DATABASE_URL
